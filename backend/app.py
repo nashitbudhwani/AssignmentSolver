@@ -4,13 +4,16 @@ import requests
 import os
 from openai import OpenAI
 from flask_cors import CORS
+from dotenv import load_dotenv
+
 
 app = Flask(__name__)
 Swagger(app)
 CORS(app)
+load_dotenv()
 
-OCR_API_KEY = secret_key = os.environ.get('OCR_API_KEY', 'K83581708488957')  # Replace with your OCR API key
-os.environ["OPENAI_API_KEY"] = "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"
+OCR_API_KEY = secret_key = os.environ.get('OCR_API_KEY', 'default_value_if_not_present')  # Replace with your OCR API key
+os.environ["OPENAI_API_KEY"] = os.environ.get('OPENAI_API_KEY', 'default_value_if_not_present')
 
 # OCR api
 @app.route('/ocr', methods=['POST'])
@@ -109,7 +112,7 @@ def gpt():
         ]
     )
 
-    return jsonify({'text':completion.choices[0].message}), 200
+    return ({'text':completion.choices[0].message}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
