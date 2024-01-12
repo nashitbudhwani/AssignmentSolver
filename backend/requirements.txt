@@ -1,4 +1,6 @@
 easyocr
 Flask
 Pillow
-flask
+requests
+openai
+

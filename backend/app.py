@@ -1,28 +1,115 @@
 from flask import Flask, request, jsonify
-from PIL import Image
-import easyocr
+from flasgger import Swagger
+import requests
+import os
+from openai import OpenAI
+from flask_cors import CORS
 
 app = Flask(__name__)
+Swagger(app)
+CORS(app)
 
+OCR_API_KEY = secret_key = os.environ.get('OCR_API_KEY', 'K83581708488957')  # Replace with your OCR API key
+os.environ["OPENAI_API_KEY"] = "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"
+
+# OCR api
 @app.route('/ocr', methods=['POST'])
 def ocr():
-    # Check if an image path is provided in the request
-    if 'image_path' not in request.form:
-        return jsonify({'error': 'No image path provided'}), 400
+    """
+    OCR API
+    ---
+    consumes:
+      - multipart/form-data
+    parameters:
+      - name: image
+        in: formData
+        type: file
+        required: true
+        description: The image file to process
+    responses:
+      200:
+        description: Text extracted from the image
+        schema:
+          type: object
+          properties:
+            text:
+              type: string
+      400:
+        description: Bad Request
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+      500:
+        description: Internal Server Error
+        schema:
+          type: object
+          properties:
+            error:
+              type: string
+    """
+    # Check if an image file is provided in the request
+    if 'image' not in request.files:
+        return jsonify({'error': 'No image file provided'}), 400
 
-    image_path = request.form['image_path']
+    image = request.files['image']
 
-    # Perform OCR using easyocr
+    # Save the image temporarily
+    temp_image_path = 'temp_image.png'
+    image.save(temp_image_path)
+
+    # Perform OCR using OCR.space Free OCR API
     try:
-        reader = easyocr.Reader(['en'])  # You can specify the language(s) you want to use
-        result = reader.readtext(image_path)
+        ocr_url = 'https://api.ocr.space/parse/image'
+        payload = {
+            'apikey': OCR_API_KEY,
+            'language': 'eng',  # You can specify the language(s) you want to use
+        }
 
-        # Extract text from the result
-        text = ' '.join([item[1] for item in result])
+        with open(temp_image_path, 'rb') as image_file:
+            files = {'image': (temp_image_path, image_file)}
+            response = requests.post(ocr_url, data=payload, files=files)
 
-        return jsonify({'text': text}), 200
+        # Remove the temporary image file
+        os.remove(temp_image_path)
+
+        if response.status_code == 200:
+            result = response.json()
+            text = ' '.join([item['ParsedText'] for item in result['ParsedResults']])
+            return jsonify({'text': text}), 200
+        else:
+            return jsonify({'error': f'OCR API error: {response.text}'}), response.status_code
     except Exception as e:
         return jsonify({'error': f'Error processing the image: {str(e)}'}), 500
+    
+
+# GPT 3.5 api    
+@app.route('/gpt3.5', methods=['POST'])
+def gpt():
+    """
+    GPT 3.5 API
+    ---
+    responses:
+      200:
+        description: Generated text from GPT 3.5
+        schema:
+          type: object
+          properties:
+            text:
+              type: string
+    """
+    client = OpenAI()
+
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a poetic assistant, skilled in explaining complex programming concepts with creative flair."},
+            {"role": "user", "content": "Compose a poem that explains the concept of recursion in programming."}
+        ]
+    )
+
+    return jsonify({'text':completion.choices[0].message}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
