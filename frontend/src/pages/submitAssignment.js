@@ -39,7 +39,7 @@ function CreatePost() {
           }
         );
 
-        return "Files uploaded successfully:", uploadResponse;
+        return "Files uploaded successfully:"+ uploadResponse;
       }
     } catch (error) {
       console.error("Failed to create post or upload files!", error);
