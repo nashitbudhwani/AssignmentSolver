@@ -24,25 +24,30 @@ function CreatePost() {
 
   const handlePostClick = async () => {
     try {
-
-      // Call the second API to upload files using the postId obtained from the first API response
-      if (file) {
-        const formData = new FormData();
-        formData.append("image", file);
-
-        const uploadResponse = await axios.post(
-          `https://dea5-117-102-52-3.ngrok-free.app/ocr`,
-          {
-            body:{
-                formData,
-            },
-          }
-        );
-
-        return "Files uploaded successfully:"+ uploadResponse;
+      // Check if a file is selected
+      if (!file) {
+        console.log("No file selected");
+        return;
       }
+  
+      // Call the second API to upload files
+      const formData = new FormData();
+      formData.append("image", file);
+  
+      const uploadResponse = await axios.post(
+        `http://127.0.0.1:5000/ocr`,
+        formData,  // Pass formData directly as the second argument
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",  // Set content type for the FormData
+          },
+        }
+      );
+  
+      console.log("Files uploaded successfully:", uploadResponse.data);
+      return uploadResponse.data;
     } catch (error) {
-      console.error("Failed to create post or upload files!", error);
+      console.error("Failed to upload file!", error);
     }
   };
 
