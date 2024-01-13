@@ -1,4 +1,3 @@
-// UploadButton component
 import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "@mui/material/Button";
@@ -27,7 +26,7 @@ function UploadButton({ icon, onPostIdUpdate, onFileSelect }) {
         color="normal"
         sx={{
           m: 0,
-          px: "600px",
+          px: "550px",
           py: "200px",
           backgroundColor: "#afc0c2",
           transition: "background-color 0.3s", // Optional: Add a transition for a smoother effect
@@ -37,7 +36,8 @@ function UploadButton({ icon, onPostIdUpdate, onFileSelect }) {
         }}
         onClick={handleButtonClick}
       >
-        <FontAwesomeIcon icon={icon} style={{ marginRight: "10px" }} />
+        <FontAwesomeIcon icon={icon} style={{ marginRight: "10px", fontSize: '5em', color:'#8f826d'}} />
+        {/* Adjust the width and fontSize according to your requirements */}
       </Button>
       <input
         type="file"
