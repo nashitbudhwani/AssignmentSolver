@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Typography, Box, Button, TextField } from "@mui/material";
 
-
 function Chat({ answer }) {
-  const [content, setContent] = useState("");
-  const chatApi= process.env.REACT_APP_API + "/gpt";
+  const [content, setContent] = useState(answer.text || "");
+
+  const chatApi = process.env.REACT_APP_API + "/gpt";
+
   const handleChatClick = async () => {
     try {
       const uploadResponse = await axios.post(
@@ -15,10 +16,11 @@ function Chat({ answer }) {
         },
         {
           headers: {
-            "Content-Type": "application/json", 
+            "Content-Type": "application/json",
           },
         }
       );
+
       console.log("Message sent successfully:", uploadResponse.data);
       return uploadResponse.data;
     } catch (error) {
@@ -30,9 +32,8 @@ function Chat({ answer }) {
     <Box>
       <Box sx={{ p: 3, mt: "5vh" }}>
         <TextField
-          
-          defaultValue={answer.text}
-          onChange={(e) => setContent(e.target.value)}
+          value={content}
+          onChange={(e) => setContent(answer.text + e.target.value)}
         />
         <div
           style={{
@@ -49,4 +50,5 @@ function Chat({ answer }) {
     </Box>
   );
 }
+
 export default Chat;
