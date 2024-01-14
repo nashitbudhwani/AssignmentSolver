@@ -14,7 +14,8 @@ function CreatePost() {
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
   const [isChatEnabled, setIsChatEnabled] = useState(false);
-  const ocrApi= process.env.REACT_APP_OCR_API;
+  const ocrApi= process.env.REACT_APP_API + "/ocr";
+  console.log("ocrApi",ocrApi);
   const handlePostClick = async () => {
     try {
       if (!file) {

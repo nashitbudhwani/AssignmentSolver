@@ -1,6 +1,0 @@
-easyocr
-Flask
-Pillow
-requests
-openai
-

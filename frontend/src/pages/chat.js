@@ -5,7 +5,7 @@ import { Typography, Box, Button, TextField } from "@mui/material";
 
 function Chat({ answer }) {
   const [content, setContent] = useState("");
-  const chatApi= process.env.REACT_APP_CHAT_API;
+  const chatApi= process.env.REACT_APP_API + "/gpt";
   const handleChatClick = async () => {
     try {
       const uploadResponse = await axios.post(
@@ -30,8 +30,8 @@ function Chat({ answer }) {
     <Box>
       <Box sx={{ p: 3, mt: "5vh" }}>
         <TextField
-          value={content}
-          defaultValue={answer}
+          
+          defaultValue={answer.text}
           onChange={(e) => setContent(e.target.value)}
         />
         <div
