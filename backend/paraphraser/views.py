@@ -1,28 +1,33 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from openai import OpenAI
+from rest_framework import status
+import os
+from decouple import config, Csv
 
-def post(self, request, *args, **kwargs):
-    try:
+os.environ["OPENAI_API_KEY"] = config('OPENAI_API_KEY')
+
+class ParaphraseView(APIView):
+    def post(self, request, *args, **kwargs):
         input_text = request.data.get('input_text')
-
+        return Response({'paraphrased_text': "hellow"}, status=status.HTTP_200_OK)
         if not input_text:
-            return Response({'error': 'Missing input_text in the request data'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Missing input_text in the request body'}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Load pre-trained MarianMT model and tokenizer
-        model_name = "Helsinki-NLP/opus-mt-en-ROMANCE"  # Replace with the desired model
-        model = MarianMTModel.from_pretrained(model_name)
-        tokenizer = MarianTokenizer.from_pretrained(model_name)
+        # Set your OpenAI API key
+    
+        client = OpenAI()
+        # Use the OpenAI API for paraphrasing with text-davinci-003 engine
+        
 
-        # Tokenize the input text
-        inputs = tokenizer(input_text, return_tensors="pt", max_length=512, truncation=True)
+        completion = OpenAI().chat.completions.create(
+                model="text-davinci-003",
+                messages=[
+                    {"role": "system", "content": "You are an assignment solver. You are given a question and you have to answer it."},
+                    {"role": "user", "content": input_text}
+                ]
+            )
 
-        # Generate paraphrased text
-        outputs = model.generate(**inputs)
-
-        # Decode the generated tokens
-        paraphrased_text = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
+        paraphrased_text = completion.choices[0].message.content
 
         return Response({'paraphrased_text': paraphrased_text}, status=status.HTTP_200_OK)
-    except Exception as e:
-        return Response({'error': f'Error processing the request: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

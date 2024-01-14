@@ -18,7 +18,6 @@ DEBUG = True
 backend_url = config('BACKEND_URL')
 ALLOWED_HOSTS = [
     backend_url
-    
 ]
 
 
