@@ -2,25 +2,27 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from openai import OpenAI
 
-class ParaphraseView(APIView):
-    def post(self, request, *args, **kwargs):
-        try:
-            input_text = request.data.get('input_text')
+def post(self, request, *args, **kwargs):
+    try:
+        input_text = request.data.get('input_text')
 
-            if not input_text:
-                return Response({'error': 'Missing input_text in the request body'}, status=400)
+        if not input_text:
+            return Response({'error': 'Missing input_text in the request data'}, status=status.HTTP_400_BAD_REQUEST)
 
-            # Use the OpenAI API for paraphrasing
-            response = OpenAI().chat.completions.create(
-                engine="text-davinci-003",
-                prompt=input_text,
-                max_tokens=50,
-                temperature=0.7,
-                n=1,
-            )
+        # Load pre-trained MarianMT model and tokenizer
+        model_name = "Helsinki-NLP/opus-mt-en-ROMANCE"  # Replace with the desired model
+        model = MarianMTModel.from_pretrained(model_name)
+        tokenizer = MarianTokenizer.from_pretrained(model_name)
 
-            paraphrased_text = response.choices[0].text.strip()
+        # Tokenize the input text
+        inputs = tokenizer(input_text, return_tensors="pt", max_length=512, truncation=True)
 
-            return Response({'paraphrased_text': paraphrased_text}, status=200)
-        except Exception as e:
-            return Response({'error': f'Error processing the request: {str(e)}'}, status=500)
+        # Generate paraphrased text
+        outputs = model.generate(**inputs)
+
+        # Decode the generated tokens
+        paraphrased_text = tokenizer.batch_decode(outputs, skip_special_tokens=True)[0]
+
+        return Response({'paraphrased_text': paraphrased_text}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': f'Error processing the request: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
