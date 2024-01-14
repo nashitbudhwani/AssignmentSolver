@@ -14,33 +14,33 @@ function CreatePost() {
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
   const [isChatEnabled, setIsChatEnabled] = useState(false);
-
+  const ocrApi= process.env.REACT_APP_OCR_API;
   const handlePostClick = async () => {
-    // try {
-    //   if (!file) {
-    //     console.log("No file selected");
-    //     return;
-    //   }
+    try {
+      if (!file) {
+        console.log("No file selected");
+        return;
+      }
 
-    //   const formData = new FormData();
-    //   formData.append("image", file);
+      const formData = new FormData();
+      formData.append("image", file);
 
-    //   const uploadResponse = await axios.post(
-    //     `https://dea5-117-102-52-3.ngrok-free.app/ocr`,
-    //     formData,
-    //     {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     }
-    //   );
-//      setContent(uploadResponse.data);
-    //   console.log("Files uploaded successfully:", uploadResponse.data);
-       setIsChatEnabled(true); // Enable the Chat component
-    //   return uploadResponse.data;
-    // } catch (error) {
-    //   console.error("Failed to upload file!", error);
-    // }
+      const uploadResponse = await axios.post(
+        ocrApi,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+     setContent(uploadResponse.data);
+      console.log("Files uploaded successfully:", uploadResponse.data);
+       setIsChatEnabled(true);
+      return uploadResponse.data;
+    } catch (error) {
+      console.error("Failed to upload file!", error);
+    }
   };
 
   return (
@@ -60,7 +60,7 @@ function CreatePost() {
         </Typography>
         <Box>
           {isChatEnabled ? (
-            <Chat /> // Render the Chat component when isChatEnabled is true
+            <Chat answer={content} /> 
           ) : (
             <UploadButton
               icon={faCloudArrowDown}

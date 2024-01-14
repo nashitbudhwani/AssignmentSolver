@@ -1,32 +1,24 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Typography,
-  Box,
-  Button,
-} from "@mui/material";
-import { faCloudArrowDown } from "@fortawesome/free-solid-svg-icons";
-import UploadButton from "../components/UploadButton";
+import { Typography, Box, Button, TextField } from "@mui/material";
 
-function CreatePost() {
-  const [postId, setPostId] = useState("");
+
+function Chat({ answer }) {
   const [content, setContent] = useState("");
-  const [file, setFile] = useState(null);
-
+  const chatApi= process.env.REACT_APP_CHAT_API;
   const handleChatClick = async () => {
     try {
       const uploadResponse = await axios.post(
-        `https://dea5-117-102-52-3.ngrok-free.app/chat`,
+        chatApi,
         {
           user_message: content,
         },
         {
           headers: {
-            "Content-Type": "application/json", // Set content type for the FormData
+            "Content-Type": "application/json", 
           },
         }
       );
-  
       console.log("Message sent successfully:", uploadResponse.data);
       return uploadResponse.data;
     } catch (error) {
@@ -37,7 +29,11 @@ function CreatePost() {
   return (
     <Box>
       <Box sx={{ p: 3, mt: "5vh" }}>
-
+        <TextField
+          value={content}
+          defaultValue={answer}
+          onChange={(e) => setContent(e.target.value)}
+        />
         <div
           style={{
             display: "flex",
@@ -45,7 +41,6 @@ function CreatePost() {
             marginTop: "10px",
           }}
         >
-
           <Button variant="contained" color="primary" onClick={handleChatClick}>
             Chat
           </Button>
@@ -54,4 +49,4 @@ function CreatePost() {
     </Box>
   );
 }
-export default CreatePost;
+export default Chat;
