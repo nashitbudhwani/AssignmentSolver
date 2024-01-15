@@ -22,22 +22,22 @@ function UploadButton({ icon, onPostIdUpdate, onFileSelect }) {
   return (
     <>
       <Button
-        variant="none"
-        color="normal"
+        variant="contained"
+        color="primary"
         sx={{
-          m: 0,
-          px: "550px",
-          py: "200px",
-          backgroundColor: "#afc0c2",
-          transition: "background-color 0.3s", // Optional: Add a transition for a smoother effect
+          backgroundColor: "#78909c",
+          transition: "background-color 0.3s",
           "&:hover": {
-            backgroundColor: "#78909c", // Change the background color on hover
+            backgroundColor: "#546e7a",
           },
+          // Adjust the padding and fontSize according to your requirements
+          p: "20px",
+          fontSize: "1.5rem",
         }}
         onClick={handleButtonClick}
       >
-        <FontAwesomeIcon icon={icon} style={{ marginRight: "10px", fontSize: '5em', color:'#8f826d'}} />
-        {/* Adjust the width and fontSize according to your requirements */}
+        <FontAwesomeIcon icon={icon} style={{ marginRight: "10px", fontSize: '2em', color:'#fff'}} />
+        Upload File
       </Button>
       <input
         type="file"
