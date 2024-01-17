@@ -1,12 +1,38 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Typography, Box, Button } from "@mui/material";
-import { faCloudArrowDown } from "@fortawesome/free-solid-svg-icons";
+import { Typography, Box, Button, Container, Paper } from "@mui/material";
+import {
+  faCloudArrowDown,
+  faFolderOpen,
+  faPenToSquare,
+  faComment,
+} from "@fortawesome/free-solid-svg-icons";
 import UploadButton from "../components/UploadButton";
 import Chat from "../pages/chat"; // Import your Chat component
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+const serviceList = [
+  {
+    title: "STEP 1: Upload Assignment",
+    icon: faFolderOpen,
+    description:
+      "Submit your handwritten assignment and our system will read your handwritten image to generate an text for it.",
+  },
+  {
+    title: "STEP 2: Get Answer by AI",
+    icon: faComment,
+    description:
+      "The next step allows you to modify our generated text and get a response using AI.",
+  },
+  {
+    title: "STEP 3: Get Paraphrased and Handwritten",
+    icon: faPenToSquare,
+    description:
+      "Get your answers paraphrased for eleminating palagarism and get a handwritten copy.",
+  },
+];
 
 function CreatePost() {
-  const [postId, setPostId] = useState("");
   const [content, setContent] = useState("");
   const [file, setFile] = useState(null);
   const [isChatEnabled, setIsChatEnabled] = useState(false);
@@ -37,13 +63,11 @@ function CreatePost() {
   };
 
   return (
-    <Box sx={{ mt: -5, pt: "0"}}>
-      <Box sx={{ p: 3, mt: "5vh", backgroundColor: "#253439", mb:'500px'}}>
+    <Box sx={{ bgcolor: "#C1C8E4", width: "100vw", height: "100vh" }}>
+      <Container sx={{ pt: "50px" }}>
         <Typography
           sx={{
-            my: "40px",
             color: "#fff",
-            fontFamily: "Montserrat",
             fontSize: "35px",
             fontStyle: "normal",
             fontWeight: "800",
@@ -52,48 +76,61 @@ function CreatePost() {
         >
           Assignment Solver by Ali Hassan and Nashit Budhwani
         </Typography>
-        <Typography
+        <Box
           sx={{
-            my: "20px",
-            color: "#fff",
-            fontFamily: "Montserrat",
-            fontSize: "35px",
-            fontStyle: "normal",
-            fontWeight: "800",
-            lineHeight: "normal",
+            pt: 4,
+            display: "flex",
+            flexDirction: "row",
+            justifyContent: "space-between",
+            gap: 4,
           }}
         >
-          Upload Your Assignment and Click post to get it solved
-        </Typography>
-        <Box>
+          {serviceList.map((service) => (
+            <Paper
+              elevation={3}
+              sx={{ height: "230px", width: "400px", bgcolor: "#8860D0" }}
+            >
+              <Box sx={{ mt: 3, ml: "30px" }}>
+                <Typography color="primary" sx={{ fontWeight: "600" }}>
+                  {service.title}
+                </Typography>
+                <Box sx={{ my: 2, ml: "100px" }}>
+                  <FontAwesomeIcon
+                    icon={service.icon}
+                    style={{ fontSize: "60px", color: "#C1C8E4" }}
+                  />
+                </Box>
+                <Typography color="primary" sx={{fontWeight:400}}>{service.description}</Typography>
+              </Box>
+            </Paper>
+          ))}
+        </Box>
+        <Box
+          sx={{
+            mt: 6,
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           {isChatEnabled ? (
             <Chat answer={content} />
           ) : (
-            <UploadButton
-              icon={faCloudArrowDown}
-              onPostIdUpdate={setPostId}
-              onFileSelect={setFile}
-            />
+            <UploadButton icon={faCloudArrowDown} onFileSelect={setFile} />
           )}
-        </Box>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: "10px",
-          }}
-        >
           {!isChatEnabled && (
             <Button
               variant="contained"
-              color="primary"
+              color="tertiary"
               onClick={handlePostClick}
+              sx={{color:"#fff", width:"360px", "&:hover":{  
+                bgcolor:"#8860D0"
+              }}}
             >
-              Post
+              Submit
             </Button>
           )}
-        </div>
-      </Box>
+        </Box>
+      </Container>
     </Box>
   );
 }

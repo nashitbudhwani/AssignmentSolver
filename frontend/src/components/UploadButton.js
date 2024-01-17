@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "@mui/material/Button";
+import { Typography } from "@mui/material";
 
-function UploadButton({ icon, onPostIdUpdate, onFileSelect }) {
+function UploadButton({ icon, onFileSelect }) {
   const fileInputRef = useRef();
 
   const handleButtonClick = () => {
@@ -23,21 +24,17 @@ function UploadButton({ icon, onPostIdUpdate, onFileSelect }) {
     <>
       <Button
         variant="contained"
-        color="primary"
+        color="tertiary"
         sx={{
-          backgroundColor: "#78909c",
-          transition: "background-color 0.3s",
-          "&:hover": {
-            backgroundColor: "#546e7a",
-          },
-          // Adjust the padding and fontSize according to your requirements
-          p: "20px",
+          color:'#fff',
+          p: "40px",
+          width:"758px",
           fontSize: "1.5rem",
         }}
         onClick={handleButtonClick}
       >
         <FontAwesomeIcon icon={icon} style={{ marginRight: "10px", fontSize: '2em', color:'#fff'}} />
-        Upload File
+        <Typography sx={{fontWeight:500}}>Upload File</Typography> 
       </Button>
       <input
         type="file"
