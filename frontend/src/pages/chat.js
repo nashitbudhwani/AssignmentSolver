@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Typography, Box, Button, TextField, Paper } from "@mui/material";
+import {
+  Typography,
+  Box,
+  Button,
+  TextField,
+  Paper,
+  Container,
+} from "@mui/material";
 
 function Chat({ answer }) {
   const [content, setContent] = useState(answer.text || "");
@@ -50,8 +57,7 @@ function Chat({ answer }) {
       );
 
       console.log("Message sent successfully:", uploadResponse.data);
-      setParaphrasedAnswer(uploadResponse.data.answer);
-      setIsParaphraserEnabled(true);
+      setParaphrasedAnswer(uploadResponse.data.paraphrased_text);
       return uploadResponse.data;
     } catch (error) {
       console.error("Failed to send message!", error);
@@ -60,60 +66,101 @@ function Chat({ answer }) {
 
   return (
     <Box>
-      <Box sx={{ p: 3, mt: "5vh" }}>
-        <TextField
-          label="Your Message"
-          variant="outlined"
-          fullWidth
-          multiline
-          rows={4}
-          value={content}
-          onChange={(e) => setContent(answer.text + e.target.value)}
-        />
-        <div
-          style={{
+      <Container
+        sx={{
+          ml: -3,
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "space-between",
+          gap: 4.5,
+        }}
+      >
+        <Box
+          sx={{
+            width: "370px",
             display: "flex",
+            flexDirection: "column",
             justifyContent: "space-between",
-            marginTop: "10px",
+            gap: 2,
           }}
         >
-          <Paper sx={{ padding: 2, width: "45%", overflowWrap: "break-word" }}>
-            {!isAnswerEnabled && (
-              <Typography>
-                Search the retrieved text on chat GPT to find an answer
-              </Typography>
-            )}
-            {isAnswerEnabled && <Typography> Answer: {gptAnswer}</Typography>}
+          <Paper>
+            <TextField
+              label="Extracted Text From Image"
+              color="tertiary"
+              fullWidth
+              multiline
+              rows={4}
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
           </Paper>
-          <Paper sx={{ padding: 2, width: "45%", overflowWrap: "break-word" }}>
-            {isParaphraserEnabled && (
-              <Typography> Paraphrased: {paraphrasedAnswer}</Typography>
-            )}
-          </Paper>
-        </div>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            marginTop: "10px",
-          }}
-        >
           <Button
             variant="contained"
-            color="primary"
+            color="tertiary"
             onClick={handleChatClick}
           >
             Chat
           </Button>
+        </Box>
+        <Box
+          sx={{
+            width: "370px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            gap: 2,
+          }}
+        >
+          <Paper>
+            <TextField
+              label="Response by AI"
+              color="tertiary"
+              fullWidth
+              multiline
+              rows={4}
+              value={gptAnswer}
+              onChange={(e) => setGptAnswer(e.target.value)}
+            />
+          </Paper>
           <Button
             variant="contained"
-            color="primary"
+            color="tertiary"
             onClick={handlePharaphaseClick}
           >
             Paraphrase
           </Button>
-        </div>
-      </Box>
+        </Box>
+        <Box
+          sx={{
+            width: "270px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+            gap: 2,
+          }}
+        >
+        <Paper sx={{width:"365px"}}>
+        <TextField
+              label="Paraphrased Response"
+              color="tertiary"
+              fullWidth
+              multiline
+              rows={4}
+              value={paraphrasedAnswer}
+            />     
+        </Paper>
+        <Button
+            sx={{width:"365px"}}
+            variant="contained"
+            color="tertiary"
+            onClick={handlePharaphaseClick}
+          >
+            Download Handwritten
+          </Button>
+
+        </Box>
+      </Container>
     </Box>
   );
 }

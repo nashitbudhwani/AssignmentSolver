@@ -64,7 +64,7 @@ function CreatePost() {
 
   return (
     <Box sx={{ bgcolor: "#C1C8E4", width: "100vw", height: "100vh" }}>
-      <Container sx={{ pt: "50px" }}>
+      <Container sx={{ pt: "30px" }}>
         <Typography
           sx={{
             color: "#fff",
@@ -90,11 +90,11 @@ function CreatePost() {
               elevation={3}
               sx={{ height: "230px", width: "400px", bgcolor: "#8860D0" }}
             >
-              <Box sx={{ mt: 3, ml: "30px" }}>
+              <Box sx={{ mt: 3, ml: "20px" }}>
                 <Typography color="primary" sx={{ fontWeight: "600" }}>
                   {service.title}
                 </Typography>
-                <Box sx={{ my: 2, ml: "100px" }}>
+                <Box sx={{ my: 2, mx: "120px" }}>
                   <FontAwesomeIcon
                     icon={service.icon}
                     style={{ fontSize: "60px", color: "#C1C8E4" }}
@@ -107,6 +107,7 @@ function CreatePost() {
         </Box>
         <Box
           sx={{
+            ml:0,
             mt: 6,
             display: "flex",
             justifyContent: "space-between",
