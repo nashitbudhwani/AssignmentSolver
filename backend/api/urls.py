@@ -13,4 +13,5 @@ urlpatterns = [
     path('api/', include('ocr.urls')),
     path('api/', include('gpt.urls')),
     path('api/', include('paraphraser.urls')),
+    path('api/', include('handwriting.urls'))
 ]

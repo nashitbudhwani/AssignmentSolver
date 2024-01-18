@@ -16,8 +16,7 @@ SECRET_KEY = 'django-insecure-h+7pfwg9ef*&)(8u&ilys8kbe&tdwpvu7ucpl@jynzb=z-vqvt
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 backend_url = config('BACKEND_URL')
-ALLOWED_HOSTS = [
-]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -25,6 +24,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'rest_framework_swagger',
     'corsheaders',
+    'handwriting',
     'ocr',
     'gpt',
     'paraphraser',
@@ -39,11 +39,17 @@ INSTALLED_APPS = [
 
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # Add your frontend URL here
+    "http://localhost:3000",  # Adjust this to your React app's URL
+    "http://127.0.0.1:3000",  # Another common localhost address
+    "http://localhost",       # Assuming your React app may run on different ports
+    "http://127.0.0.1",
+    "http://localhost:8000",  # If your Django development server runs on a different port
+    "http://127.0.0.1:8000",  # Add your frontend URL here
     # Add more allowed origins as needed
 ]
 
 MIDDLEWARE = [
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -133,7 +139,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
+DEBUG = True
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
